@@ -1,39 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Greeting from '../components/Greeting.jsx';
-
+import { frappeClient } from "../lib/frappe";
 const pageTitle = "Home Page";
-
-import { FrappeApp } from "frappe-js-sdk";
-
-const frappe = new FrappeApp("https://floworks.frappe.cloud", {
-    useToken: true,
-    // Pass a custom function that returns the token as a string - this could be fetched from LocalStorage or auth providers like Firebase, Auth0 etc.
-    token: () => 'f686328395b893c:afb829c3ebe8541',
-    // This can be "Bearer" or "token"
-    type: "token"
-})
-
-function getToken() {
-	return `${import.meta.env.API_KEY}:${import.meta.env.API_SECRET}`;
-}
-
-// const auth = frappe.auth()
-
-// auth
-//   .getLoggedInUser()
-//   .then((user) => console.log(`User ${user} is logged in.`))
-//   .catch((error) => console.error(error));
-
-const db = frappe.db();
-const doc = await db.getDoc('Company', 'FLOWORKS')
-
-//   .then((doc) => console.log(doc))
-//   .catch((error) => console.error(error));
+const doc = await frappeClient.db().getDoc('Company', 'FLOWORKS')
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <h2>My awesome blog subtitle</h2>
-  { doc.name }
+  <h2>My awesome blog subtitle -- { doc.name }</h2>
   <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
 </BaseLayout>
