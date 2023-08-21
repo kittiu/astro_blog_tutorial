@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { frappeClient } from "../../lib/frappe";
+
+export async function getStaticPaths() {
+  const posts = await frappeClient.db().getDocList('Blog Post', {
+    fields: ['title', 'name', 'content'],
+      filters: [['published', '=', 1]],
+    orderBy: {
+      field: 'creation',
+      order: 'desc',
+    },
+  })
+  return posts.map((post) => {
+    return {
+      params: { slug: post.name },
+      props: { content: post.content, title: post.title },
+    };
+  });
+}
+
+// const { slug } = Astro.params;
+
+const { content, title } = Astro.props;
+---
+
+<BaseLayout>
+  <h2>{ title }</h2>
+  <p set:html={ content }></p>
+</BaseLayout>

@@ -1,12 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Greeting from '../components/Greeting.jsx';
+// Frappe Connection
 import { frappeClient } from "../lib/frappe";
+const company = await frappeClient.db().getDoc('Company', 'FLOWORKS')
+// --
 const pageTitle = "Home Page";
-const doc = await frappeClient.db().getDoc('Company', 'FLOWORKS')
 ---
 
 <BaseLayout pageTitle={pageTitle}>
-  <h2>My awesome blog subtitle -- { doc.name }</h2>
+  <h2>My awesome blog -- { company.name }</h2>    <!-- Use Company name -->
   <Greeting client:load messages={["Hej", "Hallo", "Hola", "Habari"]} />
 </BaseLayout>

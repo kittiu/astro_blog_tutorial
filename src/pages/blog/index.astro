@@ -1,0 +1,23 @@
+---
+import BlogPost from '../../components/BlogPost.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { frappeClient } from "../../lib/frappe";
+
+const pageTitle = "My Astro Learning Blog";
+
+const posts = await frappeClient.db().getDocList('Blog Post', {
+	fields: ['title', 'name'],
+  	filters: [['published', '=', 1]],
+	orderBy: {
+		field: 'creation',
+		order: 'desc',
+	},
+})
+
+---
+<BaseLayout pageTitle={pageTitle}>
+  <p>This is where I will post about my journey learning Astro.</p>
+  <ul>
+    {posts.map((post) => <BlogPost slug={ post.name } title={ post.title } />)}
+  </ul>
+</BaseLayout>
